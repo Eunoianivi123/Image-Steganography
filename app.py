@@ -3,7 +3,15 @@ import numpy as np
 import cv2
 from PIL import Image
 from io import BytesIO
-from imgStegno import text_to_bin, available_capacity, encode_bits_into_image, END_DELIMITER, decode_bits_from_image, bin_to_text
+from imgStegno import (
+    text_to_bin,
+    available_capacity,
+    encode_bits_into_image,
+    END_DELIMITER,
+    decode_bits_from_image,
+    bin_to_text,
+    is_printable_text,
+)
 
 
 st.set_page_config(page_title="Steganography App", layout="centered")
@@ -54,10 +62,15 @@ elif mode == "Decode (Extract Message)":
 
         if st.button("🔓 Decode Message"):
             bits = decode_bits_from_image(image)
-            if END_DELIMITER in bits:
+            # decode_bits_from_image now returns None when no delimiter is found
+            if not bits:
+                st.error("No meaningful message encoded.")
+            else:
                 message_bits = bits[:bits.index(END_DELIMITER)]
                 message = bin_to_text(message_bits)
-                st.success("✅ Hidden Message Found:")
-                st.text_area("Hidden Message", message, height=150)
-            else:
-                st.error("No hidden message found or incorrect delimiter used.")
+                # validate the decoded message is mostly printable text
+                if not is_printable_text(message):
+                    st.error("No meaningful message encoded.")
+                else:
+                    st.success("✅ Hidden Message Found:")
+                    st.text_area("Hidden Message", message, height=150)

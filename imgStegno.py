@@ -1,4 +1,5 @@
 import numpy as np
+import string
 
 def text_to_bin(message: str) -> str:
     return ''.join(format(ord(ch),'08b') for ch in message)
@@ -44,6 +45,18 @@ def bin_to_text(binary_data: str) -> str:
         chars.append(chr(int(byte, 2)))
     return ''.join(chars)
 
+
+def is_printable_text(s: str, threshold: float = 0.9) -> bool:
+    """Return True if at least `threshold` fraction of characters in s are printable.
+
+    This helps distinguish random binary garbage from meaningful text.
+    """
+    if not s:
+        return False
+    printable = set(string.printable)
+    good = sum(1 for ch in s if ch in printable)
+    return (good / len(s)) >= threshold
+
 def decode_bits_from_image(image: np.ndarray) -> str:
 
     if image.shape[2] == 4:
@@ -57,5 +70,6 @@ def decode_bits_from_image(image: np.ndarray) -> str:
         for channel in range(channels):
             bits += str(pix[channel] & 1)
             if bits.endswith(END_DELIMITER):
-               return bits
-    return ''
+                return bits
+    # No delimiter found -> indicate absence by returning None
+    return None
