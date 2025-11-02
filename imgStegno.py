@@ -1,6 +1,4 @@
-import cv2
 import numpy as np
-from tkinter import Tk,filedialog
 
 def text_to_bin(message: str) -> str:
     return ''.join(format(ord(ch),'08b') for ch in message)
