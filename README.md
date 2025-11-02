@@ -1,150 +1,176 @@
-Image Steganography using OpenCV and Streamlit
-Steganography is the art of hiding the fact that communication is taking place, by hiding information in other information. For hiding secret information in images, there exists a large variety of steganography techniques some are more complex than others and all of them have respective strong and weak points. Different applications may require absolute invisibility of the secret information, while others require a large secret message to be hidden.
-TYPES OF STEGANOGRAPHY
+# 🕵️‍♀️ Image Steganography using OpenCV and Streamlit
 
-STEGANOGRAPHY IN IMAGE
-STEGANOGRAPHY IN AUDIO
-STEGANOGRAPHY IN VIDEO
+Steganography is the **art of concealing the existence of communication** by hiding information inside other non-secret media.
+This project demonstrates **Image Steganography** using the **Least Significant Bit (LSB)** method with a simple **Streamlit GUI** that allows users to **encode (hide)** and **decode (extract)** text messages within image files.
 
-A Simple GUI Based Steganography (LSB-Method) Tool For Hide-Unhide (Encode-Decode) Text From Image File. 
+---
 
-Features
+## 🎯 Project Overview
 
-🔐 Encode (Hide) secret text messages inside images (PNG, JPG, BMP).
+A simple GUI-based steganography tool that allows users to:
 
-🔓 Decode (Extract) hidden messages from stego images.
+* Hide text data inside images using the **LSB method**.
+* Extract hidden messages from stego images.
+* Visualize both cover and stego images.
+* Download the encoded image directly through the web interface.
 
-🧠 Automatically checks the image’s capacity before encoding.
+---
 
-💬 Displays image capacity and message size in bits.
+## 🧱 Types of Steganography
 
-📥 Option to download the stego image after encoding.
+1. **Image Steganography** — Hiding data inside images (used in this project).
+2. **Audio Steganography** — Hiding data within audio signals.
+3. **Video Steganography** — Embedding data inside video frames.
 
-⚡ User-friendly Streamlit interface — no complex commands needed.
+---
 
-Technologies Used
+## 🌟 Features
 
-Python 3.x
+* 🔐 **Encode (Hide)** secret text messages inside images (PNG, JPG, BMP).
+* 🔓 **Decode (Extract)** hidden messages from stego images.
+* 🧠 Automatically checks the image’s capacity before encoding.
+* 💬 Displays image capacity and message size in bits.
+* 📥 Download stego images directly after encoding.
+* ⚡ Clean, interactive **Streamlit** interface — no command-line input needed.
 
-OpenCV (cv2)
+---
 
-NumPy
+## 🧰 Technologies Used
 
-Pillow (PIL)
+* **Python 3.x**
+* **OpenCV (cv2)**
+* **NumPy**
+* **Pillow (PIL)**
+* **Streamlit**
 
-Streamlit
+---
 
-Requirements
+## ⚙️ Requirements
 
-opencv-python-headless
+Install the following dependencies before running the project:
 
-numpy
+```bash
+pip install streamlit opencv-python pillow numpy
+```
 
-streamlit
+Or using the `requirements.txt` file:
 
-Pillow
+```bash
+pip install -r requirements.txt
+```
 
-🚀 Getting Started
-1️⃣ Clone the Repository
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone the Repository
+
+```bash
 git clone https://github.com/<your-username>/<your-repo-name>.git
 cd <your-repo-name>
+```
 
-2️⃣ Install Dependencies
+### 2️⃣ Run the Streamlit App
 
-Make sure you have Python installed (3.8+ recommended). Then install required libraries:
-
-pip install -r requirements.txt
-
-If you don’t have a requirements.txt, you can manually install them:
-
-pip install streamlit opencv-python pillow numpy
-
-▶️ Run the Application
-
-Use the following command to start the Streamlit web app:
-
+```bash
 streamlit run app.py
+```
 
-Then open the link shown in your terminal (usually http://localhost:8501) in your browser.
+Then open the link shown in the terminal (usually `http://localhost:8501`) in your browser.
 
-Documentation
+---
 
-🔍 What Is Steganography
+## 🔍 What Is Steganography
 
-Steganography is the technique of hiding secret data within an ordinary, non-secret file or message to avoid detection.
-In this project, we mainly focus on Image Steganography — concealing information inside digital images in such a way that there’s no visible change to the human eye.
+Steganography hides secret data inside ordinary media (like images, audio, or video) to prevent detection.
+In this project, we use **Image Steganography**, specifically the **Least Significant Bit (LSB) method**, to embed data into image pixels with no visible change.
 
-The most common and simple technique for image steganography is the Least Significant Bit (LSB) embedding algorithm.
+---
 
-🧩 Least Significant Bit (LSB) Technique
+## 🧩 Least Significant Bit (LSB) Technique
 
-Every color pixel in an image consists of three components — Red, Green, and Blue (RGB) — each represented by 8 bits (values ranging from 0–255).
-The LSB method hides information by altering the least significant bit of each RGB component.
+Each pixel in an image contains **Red, Green, and Blue (RGB)** components, each represented by **8 bits** (0–255).
+The **LSB** technique replaces the last bit of each color channel with a bit from the secret message.
 
-If a bit of the secret message is 1, the pixel value is made odd.
+* If the secret bit is `1` → pixel value becomes **odd**.
+* If the secret bit is `0` → pixel value becomes **even**.
 
-If it’s 0, the pixel value is made even.
+This modification is subtle and **imperceptible** to the human eye.
 
-This change is visually imperceptible, as modifying the least significant bit only changes the color intensity slightly (e.g., 255 → 254).
+> 💡 The fewer bits changed, the harder it is to detect any alteration.
 
-💡 Even though each pixel can store up to 3 bits of secret data (one per color channel), it’s good practice to store smaller messages in larger images to maintain stealth.
+---
 
-⚙️ How It Works
-🔐 Encoding Process
+## ⚙️ How It Works
 
-The secret message is first converted into binary using ASCII representation.
+### 🔐 **Encoding Process**
 
-The binary bits are embedded into the LSBs of image pixels sequentially.
+1. The secret text message is converted into **binary** (using ASCII values).
+2. Each bit of the binary message is embedded into the **LSBs** of image pixels.
+3. A **delimiter** (`1111111111111110`) marks the end of the message.
+4. The modified image is saved as the **stego image**.
 
-Once all bits are hidden, a delimiter (1111111111111110) is appended to mark the message end.
+### 🔓 **Decoding Process**
 
-The resulting image, called the Stego Image, looks visually identical to the original.
+1. Read the **LSBs** from each image pixel sequentially.
+2. Stop reading when the **delimiter** is encountered.
+3. Convert the extracted binary sequence back into readable text.
 
-🔓 Decoding Process
+---
 
-The program reads the LSBs of the image pixels.
+## 🖼️ Understanding a Digital Image
 
-It reconstructs the hidden binary sequence until it encounters the delimiter.
+A **digital image** is a 2D matrix of **pixels**, each containing RGB color intensity values between 0–255.
 
-The binary sequence is then converted back into readable text.
+| Channel | Bit Range | Description              |
+| ------- | --------- | ------------------------ |
+| Red     | 0–255     | Intensity of red color   |
+| Green   | 0–255     | Intensity of green color |
+| Blue    | 0–255     | Intensity of blue color  |
 
-🖼️ Understanding a Digital Image
+Each pixel = 3 color values × 8 bits = **24 bits total per pixel**.
+Changing the **least significant bit** (rightmost bit) alters the color by less than 1% — ideal for hidden data embedding.
 
-A digital image is a two-dimensional array (matrix) of pixels.
-Each pixel represents a color based on its RGB values.
+---
 
-Channel	Bit Range	Description
-Red	0–255	Intensity of red color
-Green	0–255	Intensity of green color
-Blue	0–255	Intensity of blue color
+## 🧠 Example
 
-Each channel is represented using 8 bits, forming 24 bits per pixel (8 * 3 = 24).
-In binary, the leftmost bit is the most significant bit (MSB) and the rightmost bit is the least significant bit (LSB).
+Suppose a pixel has:
 
-Changing the LSB alters the color by less than 1% — hence, perfect for steganography.
-
-🧠 Example
-
-Let’s say a pixel has RGB values:
-
+```
 R = 11001010
 G = 01101100
 B = 11110010
+```
 
-To hide the message bit 1, we modify the LSB of each channel:
+To hide a message bit `1`, the LSBs are modified:
 
-R = 11001011  (LSB changed to 1)
-G = 01101101  (LSB changed to 1)
-B = 11110011  (LSB changed to 1)
+```
+R = 11001011
+G = 01101101
+B = 11110011
+```
 
-The overall pixel color changes only slightly — visually undetectable to the human eye.
+The visual difference is negligible, but the data is successfully embedded.
 
-🖼️ Hiding an Image Inside Another
+---
 
-The same concept can be extended to hide an entire image within another image:
+## 🖼️ Hiding an Image Inside Another
 
-Each bit of the secret image replaces the least significant bit of the cover image.
+This same LSB concept can hide **an image within another image**:
+Each pixel of the secret image replaces the LSBs of the cover image’s pixels.
 
-The process ensures that the larger image (cover) visually remains the same.
+* More LSBs used = More data hidden.
+* But higher distortion risk — so balance capacity and image quality.
 
-The more bits you use (e.g., using 2 or 3 LSBs), the more data can be hidden — but the higher the visual distortion.
+---
+
+## 🧪 Example Workflow
+
+1. Upload a **cover image**.
+2. Enter your **secret message**.
+3. Click “🔐 Encode Message”.
+4. Download the **stego image**.
+5. Switch to “🔓 Decode Message” mode and upload the stego image to view the hidden text.
+
+---
