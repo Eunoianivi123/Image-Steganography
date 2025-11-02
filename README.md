@@ -1,4 +1,4 @@
-# 🕵️‍♀️ Image Steganography using OpenCV and Streamlit
+# 🕵️‍♀️ Image Steganography 
 
 Steganography is the **art of concealing the existence of communication** by hiding information inside other non-secret media.
 This project demonstrates **Image Steganography** using the **Least Significant Bit (LSB)** method with a simple **Streamlit GUI** that allows users to **encode (hide)** and **decode (extract)** text messages within image files.
